@@ -1,12 +1,14 @@
 #include <bits/stdc++.h>
+#include<fstream>
+
 using namespace std;
 
-vector<string> Identifier1;
-vector<string> Keywords1;
-vector<string> StringLiterals1;
-vector<string> Constants1;
-vector<string> Operators1;
-vector<char> Separators1;
+set<string> Identifier1;
+set<string> Keywords1;
+set<string> StringLiterals1;
+set<string> Constants1;
+set<string> Operators1;
+set<char> Separators1;
 
 set<string> keywords = {
     "auto","break","case","char","const","continue","default","do","double","else",
@@ -49,28 +51,28 @@ void lexicalanlyzer(string code) {
             continue;
         }
 
-        // Try multi-character operator
+        
         if (i + 1 < n) {
             string two = code.substr(i, 2);
             if (isoperator(two)) {
-                Operators1.push_back(two);
+                Operators1.insert(two);
                 cnt++;
                 i += 2;
                 continue;
             }
         }
 
-        // Try single-character operator
+        
         string one(1, code[i]);
         if (isoperator(one)) {
-            Operators1.push_back(one);
+            Operators1.insert(one);
             cnt++;
             i++;
             continue;
         }
 
         if (isseparator(code[i])) {
-            Separators1.push_back(code[i]);
+            Separators1.insert(code[i]);
             cnt++;
             i++;
             continue;
@@ -83,7 +85,7 @@ void lexicalanlyzer(string code) {
                 s += code[i++];
             }
             if (i < n) s += code[i++];
-            StringLiterals1.push_back(s);
+            StringLiterals1.insert(s);
             cnt++;
             continue;
         }
@@ -94,9 +96,9 @@ void lexicalanlyzer(string code) {
                 id += code[i++];
             }
             if (iskeyword(id)) {
-                Keywords1.push_back(id);
+                Keywords1.insert(id);
             } else {
-                Identifier1.push_back(id);
+                Identifier1.insert(id);
             }
             cnt++;
             continue;
@@ -109,7 +111,7 @@ void lexicalanlyzer(string code) {
                 if (code[i] == '.') hasDot = true;
                 num += code[i++];
             }
-            Constants1.push_back(num);
+            Constants1.insert(num);
             cnt++;
             continue;
         }
@@ -132,24 +134,28 @@ void lexicalanlyzer(string code) {
     for (const auto& op : Operators1) cout << op << " ";
     cout << endl;
 
-    cout << "Separators :";
-    for (const auto& sp : Separators1) cout << sp << " ";
-    cout << endl;
 
     cout << "Constant :";
     for (const auto& c : Constants1) cout << c << " ";
     cout << endl;
 
-    cout << "String Literals :";
-    for (const auto& s : StringLiterals1) cout << s << " ";
-    cout << endl;
+   
 }
 
 int main() {
+    ifstream file("input.c");
+
+
+    if(!file.is_open())
+    {
+        cout<<"File is not found"<<endl;
+        return 1;
+    }
     string code, line;
-    while (getline(cin, line)) {
+    while (getline(file, line)) {
         if (line == "x") break;
         code += line + "\n";
     }
+    file.close();
     lexicalanlyzer(code);
 }

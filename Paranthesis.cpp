@@ -16,12 +16,15 @@ int main()
         string s1;
         for (int i = 0; i < n; i++)
         {
-            if (i < n - 1 && s[i] == '/' && s[i + 1] == '*')
+            if (i < n - 1 && s[i] == '/' && s[i + 1] == '*')// this is (
             {
                 multicomment = true;
                 i++;
                 continue;
             }
+            /*
+            this is multiline comment009999 ({
+            */
             if (i < n - 1 && s[i] == '*' && s[i + 1] == '/')
             {
                 multicomment = false;
